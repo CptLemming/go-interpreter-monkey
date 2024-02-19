@@ -1,6 +1,9 @@
 package lexer
 
-import "monkey/token"
+import (
+	"monkey/token"
+	"strings"
+)
 
 type Lexer struct {
 	input        string
@@ -63,6 +66,9 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LBRACE, l.ch)
 	case '}':
 		tok = newToken(token.RBRACE, l.ch)
+	case '"':
+		tok.Literal = l.readString()
+		tok.Type = token.STRING
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -92,6 +98,26 @@ func (l *Lexer) readChar() {
 	}
 	l.position = l.readPosition
 	l.readPosition += 1
+}
+
+func (l *Lexer) readString() string {
+	position := l.position + 1
+	for {
+		curr := l.input[l.position]
+		l.readChar()
+		if (curr != '\\' && l.ch == '"') || l.ch == 0 {
+			break
+		}
+	}
+
+	str := l.input[position:l.position]
+
+	// Ash: Support for removing escaped chars
+	return strings.NewReplacer(
+		"\\n", "\n",
+		"\\t", "\t",
+		"\\", "",
+	).Replace(str)
 }
 
 func (l *Lexer) readIdentifier() string {
