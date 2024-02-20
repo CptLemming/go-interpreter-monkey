@@ -25,6 +25,8 @@ if (5 < 10) {
 
 10 == 10;
 10 != 9;
+5 <= 5;
+5 >= 5;
 "foobar"
 "foo bar"
 "hello \"world\""
@@ -120,6 +122,16 @@ if (5 < 10) {
 		{token.INT, "10"},
 		{token.NOT_EQ, "!="},
 		{token.INT, "9"},
+		{token.SEMICOLON, ";"},
+
+		{token.INT, "5"},
+		{token.LT_EQ, "<="},
+		{token.INT, "5"},
+		{token.SEMICOLON, ";"},
+
+		{token.INT, "5"},
+		{token.GT_EQ, ">="},
+		{token.INT, "5"},
 		{token.SEMICOLON, ";"},
 
 		{token.STRING, "foobar"},
