@@ -255,6 +255,12 @@ func evalInfixExpression(operator string, left, right object.Object) object.Obje
 		return evalIntegerInfixExpression(operator, left, right)
 	case left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ:
 		return evalStringInfixExpression(operator, left, right)
+	case left.Type() == object.INTEGER_OBJ && right.Type() == object.STRING_OBJ:
+		intVal := left.(*object.Integer).Value
+		return evalStringInfixExpression(operator, &object.String{Value: fmt.Sprintf("%d", intVal)}, right)
+	case left.Type() == object.STRING_OBJ && right.Type() == object.INTEGER_OBJ:
+		intVal := right.(*object.Integer).Value
+		return evalStringInfixExpression(operator, left, &object.String{Value: fmt.Sprintf("%d", intVal)})
 	case operator == "==":
 		return nativeBoolToBooleanObject(left == right)
 	case operator == "!=":
